@@ -84,7 +84,7 @@ class CustomText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(text,textAlign: textAlign,textDirection: TextDirection.rtl,style: TextStyle(color: color,fontSize: double.parse(fontSize.toString()),fontWeight: fontWeight,decoration: textDecoration),);
+    return Text(text,textAlign: textAlign,textDirection: TextDirection.rtl,style: TextStyle(color: color,fontSize: double.parse(fontSize.toString()),fontWeight: fontWeight,decoration: textDecoration,overflow: TextOverflow.ellipsis),maxLines: 3,);
   }
 }
 

@@ -104,7 +104,7 @@ class HomeProvider extends ChangeNotifier{
     notifyListeners();
     Map response = await HomeRepositories.getNotification();
     try{
-      //notificationModel = NotificationModel.fromJson(response);
+    //  notificationModel = NotificationModel.fromJson(response);
       HomeStates.marketOffersState = MarketOffersState.LOADED;
       notifyListeners();
       return notificationModel;

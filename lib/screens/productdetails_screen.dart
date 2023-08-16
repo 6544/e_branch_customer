@@ -13,6 +13,7 @@ import '../helpers/navigations.dart';
 import '../providers/home_provider.dart';
 import '../services/firebase_auth_methods.dart';
 import '../states/homes_states.dart';
+import 'cart_screen.dart';
 
 
 class ProductDetailsScreen extends StatefulWidget {
@@ -40,9 +41,9 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(text: widget.product["name"],actions: [
-        if(widget.fromOrder==null)
+        //if(widget.fromOrder==null)
           IconButton(icon: Icon(Icons.add_shopping_cart), onPressed: (){
-            //Navigation.mainNavigator(context, CartScreen());
+            Navigation.mainNavigator(context, CartScreen());
           })
       ], leading: Container()),
       body: SingleChildScrollView(
