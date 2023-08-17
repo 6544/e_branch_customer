@@ -24,8 +24,9 @@ class CartScreen extends StatefulWidget {
 
 class _CartScreenState extends State<CartScreen> {
   var addressController = TextEditingController();
-  late LatLng location;
-  late String type,address;
+   LatLng location =LatLng(20, 20) ;
+   String type="";
+       String address="";
   var copounController = TextEditingController();
 
   var copoun ="";
@@ -61,7 +62,7 @@ class _CartScreenState extends State<CartScreen> {
                   return snapshot.data!.docs.length==0?Center(child: CustomText(text: "لا يوجد منتجات", fontSize: 18, textDecoration: TextDecoration.none,)):ListView.builder(
                       itemCount:1 /*snapshot.data!.docs.length*/,
                       itemBuilder: ((context, index) {
-                        return                   Consumer<HomeProvider>(builder: (context,data,_){
+                        return    Consumer<HomeProvider>(builder: (context,data,_){
                           return  Column(
                           children: [
                             ListView.separated(
@@ -80,7 +81,7 @@ class _CartScreenState extends State<CartScreen> {
                                         homeProvider.changeQuantity(index, homeProvider.quantities[index]-1);
                                         homeProvider.removeFromTotal(homeProvider.cartModel.data![index].offer==null?homeProvider.cartModel.data![index].price:(double.parse(homeProvider.cartModel.data![index].price.toString())-(double.parse(homeProvider.cartModel.data![index].price.toString())*(double.parse(homeProvider.cartModel.data![index].offer.toString())/100))));
                                       }*/
-                                    },qty:data.quantities[index],onTapDeleteItem: () async {
+                                    },qty:1/*data.quantities[index]*/,onTapDeleteItem: () async {
                                      /* Map response = await homeProvider.removeCartItem(homeProvider.cartModel.data![index].id);
                                       toast(response['msg'], context);
                                       if(response['status']){
@@ -170,27 +171,27 @@ class _CartScreenState extends State<CartScreen> {
                               ),
                             ),
                             SizedBox(height: 10,),
-                          /*  if(homeProvider.shippingType==1)
+                            if(data.shippingType==1)
                               Padding(
                                 padding: const EdgeInsets.all(15.0),
                                 child: CustomInput(controller: addressController, hint: "حدد الموقع", readOnly: true ,textInputType: TextInputType.text,onTap: () async {
                                   Position position = await determinePosition();
                                   List result = await Navigation.mainNavigator(context, PickLocationMapScreen(lat: position.latitude,lang: position.longitude, typeScreen: '',));
-                                  // address = result[0];
-                                  //location = result[1];
+                                   address = result[0];
+                                  location = result[1];
                                   if (type != "home") {
                                     double dictance = Geolocator.distanceBetween(
                                         double.parse(location.latitude.toString()),
                                         double.parse(location.longitude.toString()),
-                                        double.parse(homeProvider.cartModel.lat),
-                                        double.parse(homeProvider.cartModel.lang));
+                                        double.parse(data.cartModel.lat),
+                                        double.parse(data.cartModel.lang));
                                     print(dictance);
                                     if (dictance >= 40 * 1000) {
                                       type = "charger";
                                     } else {
                                       type = "driver";
                                     }
-                                    print(homeProvider.cartModel.price);
+                                    print(data.cartModel.price);
                                     setState(() {});
                                   }
                                   addressController.text = address;
@@ -203,14 +204,14 @@ class _CartScreenState extends State<CartScreen> {
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.end,
                                   children: [
-                                    CustomText(textDecoration: TextDecoration.none,text: "سعر الشحن ${type=="driver"?homeProvider.cartModel.price:homeProvider.cartModel.price2} ر.س", fontSize: 14,color: Config.mainColor,),
+                                  //  CustomText(textDecoration: TextDecoration.none,text: "سعر الشحن ${type=="driver"?homeProvider.cartModel.price:homeProvider.cartModel.price2} ر.س", fontSize: 14,color: Config.mainColor,),
                                   ],
                                 ),
                               ),
                             SizedBox(height: 10,),
                             HomeStates.makeOrderState != MakeOrderState.LOADING?CustomButton(text: "ارسال الطلب", verticalPadding: 10,color: Config.mainColor,horizontalPadding: Config.responsiveWidth(context)*0.37,onPressed: () async {
-                              print("homeProvider.shippingType  : ${homeProvider.shippingType}");
-                              if(homeProvider.shippingType==0){
+                              print("homeProvider.shippingType  : ${data.shippingType}");}
+                              /*if(homeProvider.shippingType==0){
                                 type = "home";
                               }else {
                                 if (location == null) {
@@ -234,7 +235,7 @@ class _CartScreenState extends State<CartScreen> {
                               toast(response['msg'], context);
                               if(response['status'])
                                 homeProvider.getCartData();
-                            },):Center(child: CircularProgressIndicator())*/
+                            }*/,):Center(child: CircularProgressIndicator())
                           ],
                         );
                         });

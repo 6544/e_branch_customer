@@ -14,6 +14,7 @@ import '../models/home_models/markets_model.dart';
 import '../models/home_models/products_model.dart';
 import '../providers/home_provider.dart';
 import '../states/homes_states.dart';
+import 'cart_screen.dart';
 import 'drawer_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 class HomeScreen extends StatefulWidget {
@@ -77,7 +78,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(text: pageIndex==0?"ابحث عن متجر":pageIndex==1?"الأقسام":pageIndex==2?"منتجات":"تواصل معنا",leading: IconButton(icon: Icon(Icons.add_shopping_cart,color: Color(0xffffffff),size: 35,), onPressed: (){
-       // Navigation.mainNavigator(context, CartScreen());
+        Navigation.mainNavigator(context, CartScreen());
       }), actions: []),
       endDrawer: DrawerScreen(),
       body: Column(

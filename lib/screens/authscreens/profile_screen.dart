@@ -1,6 +1,9 @@
 import 'dart:convert';
 
+import 'package:e_branch_customer/helpers/config.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../../components/components.dart';
 import '../../helpers/helperfunctions.dart';
@@ -25,33 +28,101 @@ class _ProfileScreenState extends State<ProfileScreen> {
     super.initState();
     fetchProfileData();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(text: "الملف الشخصي", leading: Container(), actions: []),
+      appBar: CustomAppBar(
+          text: "الملف الشخصي", leading: SizedBox.shrink(), actions: [
+             InkWell(
+               onTap: (){
+                 Navigator.pop(context);
+               },
+               child: Padding(
+                 padding: const EdgeInsets.all(8.0),
+                 child: Icon(Icons.arrow_forward_ios,color: Config.buttonColor,),
+               ),
+             )
+      ]),
       body: Padding(
         padding: const EdgeInsets.all(15.0),
-        child: Column(
-          children: [
-            const SizedBox(height: 15,),
-            Image.asset("images/logo.png",width: 180,height: 180,),
-            const SizedBox(height: 15,),
-            CustomInput(onTap: () {  }, prefixIcon: Container(), onChange: (String ) {  }, maxLines: 2,controller: idController, hint: "", textInputType: TextInputType.text,readOnly: true, suffixIcon: Container(), ),
-            const SizedBox(height: 15,),
-            CustomInput(onTap: () {  }, prefixIcon: Container(), onChange: (String ) {  }, maxLines: 2,controller: nameController, hint: "", textInputType: TextInputType.text,readOnly: true,suffixIcon: Container(),),
-            const SizedBox(height: 15,),
-            CustomInput(onTap: () {  }, prefixIcon: Container(), onChange: (String ) {  }, maxLines: 2,controller: emailController, hint: "", textInputType: TextInputType.emailAddress,readOnly: true,suffixIcon: Container(),),
-            const SizedBox(height: 15,),
-            CustomInput(onTap: () {  }, prefixIcon: Container(), onChange: (String ) {  }, maxLines: 2,controller: phoneController, hint: "", textInputType: TextInputType.phone,readOnly: true,suffixIcon: Container(),),
-            const SizedBox(height: 15,),
-          ],
-        ),
+        child: StreamBuilder(
+            stream: FirebaseFirestore.instance
+                .collection("customers")
+                .doc(FirebaseAuth.instance.currentUser!.uid)
+                .snapshots(),
+            builder: (context,
+                AsyncSnapshot<DocumentSnapshot<Map<String, dynamic>>> snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(
+                  child: CircularProgressIndicator(
+                    color: Colors.white,
+                  ),
+                );
+              }
+              return Column(
+                      children: [
+                        const SizedBox(height: 15,),
+                        Image.asset(
+                          "images/logo.png", width: 180, height: 180,),
+                        const SizedBox(height: 15,),
+                        CustomInput(onTap: () {},
+                          prefixIcon:Icon(Icons.qr_code,color: Config.mainColor,),
+                          onChange: (String) {},
+                          maxLines: 1,
+                          controller: idController,
+                          hint: "الكود الخاص بك : ${123456852}",
+                          textInputType: TextInputType.text,
+                          readOnly: true,
+                          suffixIcon: SizedBox.shrink(),),
+                        const SizedBox(height: 15,),
+                        CustomInput(onTap: () {},
+                          prefixIcon: Icon(Icons.person, color: Config
+                              .mainColor,),
+                          onChange: (String) {},
+                          maxLines: 1,
+                          controller: nameController,
+                          hint: "${snapshot.data!['fullName']}  : الاسم بالكامل",
+                          textInputType: TextInputType.text,
+                          readOnly: true,
+                          suffixIcon: SizedBox.shrink(),),
+                        const SizedBox(height: 15,),
+                        CustomInput(onTap: () {},
+                          prefixIcon: Icon(Icons.email, color: Config
+                              .mainColor,),
+                          onChange: (String) {},
+                          maxLines: 1,
+                          controller: emailController,
+                          hint: "${FirebaseAuth.instance.currentUser!.email
+                              .toString()}  : البريد الالكتروني",
+                          textInputType: TextInputType.emailAddress,
+                          readOnly: true,
+                          suffixIcon: SizedBox.shrink(),),
+                        const SizedBox(height: 15,),
+                        CustomInput(onTap: () {},
+                          prefixIcon:Icon(Icons.phone,color: Config.mainColor,),
+                          onChange: (String) {},
+                          maxLines: 1,
+                          controller: phoneController,
+                          hint: "${snapshot.data!['phoneNo']}  :  رقم الهاتف",
+                          textInputType: TextInputType.phone,
+                          readOnly: true,
+                          suffixIcon:SizedBox.shrink(),),
+                        const SizedBox(height: 15,),
+                      ],
+                    );
+
+
+            }),
+
+
       ),
     );
   }
 
   fetchProfileData() async {
-    Map<String,dynamic> mapResponse = jsonDecode(await getSavedString("userData", ""));
+    Map<String, dynamic> mapResponse = jsonDecode(
+        await getSavedString("userData", ""));
     Data model = Data.fromJson(mapResponse);
     print(model);
     idController.text = "الكود الخاص بك : ${model.id.toString()}";

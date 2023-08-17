@@ -221,7 +221,7 @@ class FirebaseAuthMethods {
     required String productPic,
     required String productPrice,
     required String productTitle,
-   // required String postLocation,
+   required String productDescription,
   }) async {
     String res = "Some error Occured";
     try {

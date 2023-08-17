@@ -231,7 +231,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                         productPic: widget.product!['imageurl'],
                         productPrice: widget.product!['price'],
                         productTitle: widget.product!['name'],
-                        //postLocation: snap!['location'],
+                        productDescription: widget.product!['description'],
                       );
 
                       if (res == 'success') {

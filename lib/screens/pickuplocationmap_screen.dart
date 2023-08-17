@@ -1,5 +1,5 @@
 import 'dart:async';
-
+import 'package:geocoding/geocoding.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -23,7 +23,7 @@ class PickLocationMapScreen extends StatefulWidget {
 class _PickLocationMapScreenState extends State<PickLocationMapScreen> {
   late GoogleMapController googleMapController;
   late CameraPosition _initialCameraPosition;
-  late LatLng _currentLocation;
+   LatLng _currentLocation=LatLng(20, 20);
 
   var searchController = TextEditingController();
 
@@ -33,10 +33,10 @@ class _PickLocationMapScreenState extends State<PickLocationMapScreen> {
     super.initState();
     _initialCameraPosition = CameraPosition(target: LatLng(widget.lat,widget.lang), zoom: 8);
     Future.delayed(Duration(seconds: 0),()async{
-      /*if(widget.typeScreen==null) {
-        Provider.of<HomeProvider>(context, listen: false).setAddress(null);
-        Provider.of<HomeProvider>(context, listen: false).setPosition(null);
-      }*/
+      if(widget.typeScreen==null) {
+        Provider.of<HomeProvider>(context, listen: false).setAddress("");
+        Provider.of<HomeProvider>(context, listen: false).setPosition(LatLng(20, 20));
+      }
     });
   }
   @override
@@ -92,10 +92,10 @@ class _PickLocationMapScreenState extends State<PickLocationMapScreen> {
                     width: Config.responsiveWidth(context)*0.7,
                     child: CustomInput(controller: searchController, hint: "ابحث عن موقع", textInputType: TextInputType.text,onChange: (v) async {
                       print(v);
-                      //var addresses = await Geolocator.bearingBetween(v);
-                      //print(addresses);
-                     // var first = addresses.first;
-                      //_currentLocation = LatLng(addresses.first.coordinates.latitude, addresses.first.coordinates.longitude);
+                      var addresses = await locationFromAddress(v);//locationFromAddress.findAddressesFromQuery(v);
+                      print(addresses);
+                      var first = addresses.first;
+                      _currentLocation = LatLng(addresses.first.latitude, addresses.first.longitude);
                       if (_currentLocation != null) {
                         googleMapController.animateCamera(
                             CameraUpdate.newCameraPosition(

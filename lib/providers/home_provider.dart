@@ -285,7 +285,7 @@ class HomeProvider extends ChangeNotifier{
     notifyListeners();
   }
 
-  late String _address;
+   String _address="";
   String get getAddress => _address;
   setAddress(String address){
     _address = address;
