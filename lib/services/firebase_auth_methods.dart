@@ -253,7 +253,8 @@ class FirebaseAuthMethods {
   }) async {
     String res = "Some error Occured";
     try {
-      String cartId = Uuid().v1();
+      String cartId = uid[0].toLowerCase().codeUnits[0] >
+          productTitle.toLowerCase().codeUnits[0]?"$uid$productTitle":"$productTitle$uid";//Uuid().v1();
       await _firebaseFirestore
           .collection('customers')
           .doc(uid)
@@ -266,6 +267,7 @@ class FirebaseAuthMethods {
         "postPic": productPic,
         "postPrice": productPrice,
         "postTitle": productTitle,
+        "postDesc":productDescription
        // "postLocation": postLocation,
       //  "datePublished": DateTime.now(),
       });

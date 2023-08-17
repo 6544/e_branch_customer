@@ -45,10 +45,6 @@ class _CartScreenState extends State<CartScreen> {
                     .collection("customers")
                     .doc(FirebaseAuth.instance.currentUser!.uid)
                     .collection('cart')
-                    .orderBy(
-                  "datePublished",
-                  descending: true,
-                )
                     .snapshots(),
                 builder: (context,
                     AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
@@ -69,7 +65,7 @@ class _CartScreenState extends State<CartScreen> {
                                 shrinkWrap: true,
                                 physics: NeverScrollableScrollPhysics(),
                                 itemBuilder: (context,index){
-                                  return CartCard(text: snapshot.data!.docs[index]["postTitle"],image:snapshot.data!.docs[index]["postPic"],desc:snapshot.data!.docs[index]["description"],price:snapshot.data!.docs[index]["postPrice"] /*homeProvider.cartModel.data![index].offer==null?homeProvider.cartModel.data![index].price.toString():(double.parse(homeProvider.cartModel.data![index].price.toString())-(double.parse(homeProvider.cartModel.data![index].price.toString())*(double.parse(homeProvider.cartModel.data![index].offer.toString())/100))).toString()*/,
+                                  return CartCard(text: snapshot.data!.docs[index]["postTitle"],image:snapshot.data!.docs[index]["postPic"],desc:snapshot.data!.docs[index]["postDesc"],price:snapshot.data!.docs[index]["postPrice"] /*homeProvider.cartModel.data![index].offer==null?homeProvider.cartModel.data![index].price.toString():(double.parse(homeProvider.cartModel.data![index].price.toString())-(double.parse(homeProvider.cartModel.data![index].price.toString())*(double.parse(homeProvider.cartModel.data![index].offer.toString())/100))).toString()*/,
                                     onIncrement: (){
                                       /*if(data.quantities[index]!=data.cartModel.data![index].amount){
                                         data.changeQuantity(index, data.quantities[index]+1);
@@ -197,7 +193,7 @@ class _CartScreenState extends State<CartScreen> {
                                   }
                                   addressController.text = address;
                                   print(location);
-                                },suffixIcon: Icon(Icons.map), prefixIcon: Container(), onChange: (String ) {  }, maxLines: 1,),
+                                },suffixIcon: Icon(Icons.map), prefixIcon: SizedBox.shrink(), onChange: (String ) {  }, maxLines: 1,),
                               ),
                             if(type!="home" && location!=null)
                               Padding(
@@ -210,19 +206,30 @@ class _CartScreenState extends State<CartScreen> {
                                 ),
                               ),
                             SizedBox(height: 10,),
-                            HomeStates.makeOrderState != MakeOrderState.LOADING?CustomButton(text: "ارسال الطلب", verticalPadding: 10,color: Config.mainColor,horizontalPadding: Config.responsiveWidth(context)*0.37,onPressed: () async {
-                              print("homeProvider.shippingType  : ${data.shippingType}");}
-                              /*if(homeProvider.shippingType==0){
-                                type = "home";
-                              }else {
-                                if (location == null) {
-                                  return toast("من فضلك حدد موقعك", context);
-                                }
-                                print('lat ${homeProvider.cartModel.lat}');
-                                print('lat ${homeProvider.cartModel.lang}');
+                            /*HomeStates.makeOrderState != MakeOrderState.LOADING?*/
+                         //   Consumer<HomeProvider>(builder: (context,homeprovider,_){
+                             // return
+                                CustomButton(text: "ارسال الطلب", verticalPadding: 10,color: Config.mainColor,horizontalPadding: Config.responsiveWidth(context)*0.37,onPressed: () async {
 
-                              }
-                              Map formData = {
+                                  print("homeProvider.shippingType  : ${data.shippingType}");
+                               // if(data.shippingType==0){
+                                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("تم ارسال الطلب بنجاح"),duration: Duration(seconds: 1),));
+                              //  toast("", context);
+                                  await FirebaseFirestore.instance.collection("orders").doc(FirebaseAuth.instance.currentUser!.uid).set({
+                                    "type":data.shippingType,
+                                    "image":snapshot.data!.docs.first["postPic"],
+                                    "name":snapshot.data!.docs.first["postTitle"]
+                                  });
+                              //  }else {
+
+                                  /*if (location == null) {
+                                    return toast("من فضلك حدد موقعك", context);*/
+                                 // }
+                             //     print('lat ${homeProvider.cartModel.lat}');
+                               //   print('lat ${homeProvider.cartModel.lang}');
+
+                                }
+                                /*    Map formData = {
                                 "product_id": homeProvider.productIds.join(","),
                                 "amount": homeProvider.quantities.join(","),
                                 "price": homeProvider.total.toString(),
@@ -235,8 +242,11 @@ class _CartScreenState extends State<CartScreen> {
                               Map response = await homeProvider.makeOrder(formData);
                               toast(response['msg'], context);
                               if(response['status'])
-                                homeProvider.getCartData();
-                            }*/,):Center(child: CircularProgressIndicator())
+                                homeProvider.getCartData();*/
+                              ),
+                         //   }),
+
+
                           ],
                         );
                         });
