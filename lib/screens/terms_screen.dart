@@ -20,7 +20,7 @@ class _TermsScreenState extends State<TermsScreen> {
 
     return Scaffold(
       appBar: CustomAppBar(text: widget.type=="about"?"معلومات عننا":widget.type=="privcy"?"سياسة الخصوصية":"الشروط والأحكام", leading: Container(), actions: []),
-      body: ChangeNotifierProvider(
+      body:Container() /*ChangeNotifierProvider(
         create: (BuildContext context) => HomeProvider()..terms(widget.type),
         child: Consumer<HomeProvider>(
             builder: (context, provider,child) {
@@ -32,7 +32,7 @@ class _TermsScreenState extends State<TermsScreen> {
               );
             }
         ),
-      ),
+      ),*/
     );
   }
 }

@@ -1,3 +1,4 @@
+/*
 import 'package:e_branch_customer/repositories/public_repo.dart';
 
 class HomeRepositories{
@@ -99,4 +100,4 @@ class HomeRepositories{
     return await PublicRopository.repo("terms/$type","get");
   }
 
-}
+}*/

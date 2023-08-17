@@ -34,8 +34,8 @@ class _PickLocationMapScreenState extends State<PickLocationMapScreen> {
     _initialCameraPosition = CameraPosition(target: LatLng(widget.lat,widget.lang), zoom: 8);
     Future.delayed(Duration(seconds: 0),()async{
       if(widget.typeScreen==null) {
-        Provider.of<HomeProvider>(context, listen: false).setAddress("");
-        Provider.of<HomeProvider>(context, listen: false).setPosition(LatLng(20, 20));
+      //  Provider.of<HomeProvider>(context, listen: false).setAddress("");
+       // Provider.of<HomeProvider>(context, listen: false).setPosition(LatLng(20, 20));
       }
     });
   }
@@ -143,13 +143,13 @@ class _PickLocationMapScreenState extends State<PickLocationMapScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    CustomText(text: context.watch<HomeProvider>().getAddress??'',textAlign: TextAlign.center, fontSize: 16, textDecoration: TextDecoration.none,),
+                    CustomText(text: /*context.watch<HomeProvider>().getAddress??*/'',textAlign: TextAlign.center, fontSize: 16, textDecoration: TextDecoration.none,),
                     const Spacer(),
                     CustomButton(text: "تحديد", verticalPadding: 10,color: Config.mainColor,horizontalPadding: Config.responsiveWidth(context)*0.4,onPressed: () async {
                       String address = await LocationService.getAddress(LatLng(_currentLocation.latitude, _currentLocation.longitude));
-                      Provider.of<HomeProvider>(context,listen: false).setAddress(address);
-                      context.read<HomeProvider>().setPosition(_currentLocation);
-                      Navigator.pop(context,[context.read<HomeProvider>().getAddress,context.read<HomeProvider>().getPosition]);
+                 //     Provider.of<HomeProvider>(context,listen: false).setAddress(address);
+                   //   context.read<HomeProvider>().setPosition(_currentLocation);
+                      Navigator.pop(context,/*[context.read<HomeProvider>().getAddress,context.read<HomeProvider>().getPosition]*/);
                     },)
                   ],
                 ),

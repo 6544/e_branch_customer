@@ -1,3 +1,4 @@
+/*
 
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -55,8 +56,12 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                     mainAxisSpacing: 10,
                     childAspectRatio: (Config.responsiveHeight(context)*0.15 / 160),
                     children: List.generate(widget.products.length, (index) {
-                      return ProductCard(name: widget.products[index].name!,image: widget.products[index].photo!,price: widget.products[index].price.toString(),offer: "1"/*widget.products[index].offer==0?null:widget.products[index].offer.toString()*/,onTap: (){
-                        Navigation.mainNavigator(context, ProductDetailsScreen(product: widget.products[index],offer:true /*widget.products[index].offer==0?null:true*/,fromOrder: true));
+                      return ProductCard(name: widget.products[index].name!,image: widget.products[index].photo!,price: widget.products[index].price.toString(),offer: "1"*/
+/*widget.products[index].offer==0?null:widget.products[index].offer.toString()*//*
+,onTap: (){
+                        Navigation.mainNavigator(context, ProductDetailsScreen(product: widget.products[index],offer:true */
+/*widget.products[index].offer==0?null:true*//*
+,fromOrder: true));
                       }, catName: widget.products[index].cat!.name!,);
                     }),
                   ),
@@ -232,4 +237,4 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
       ),
     );
   }
-}
+}*/

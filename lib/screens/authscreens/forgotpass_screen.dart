@@ -38,14 +38,15 @@ class _ForgotPassScreenState extends State<ForgotPassScreen> {
               const SizedBox(height: 15,),
               CustomInput(controller: passwordController, hint: "كلمة المرور الجديدة", textInputType: TextInputType.text,obscureText: true,suffixIcon: Icon(Icons.lock,color: Config.mainColor,), onTap: () {  }, prefixIcon:  Icon(Icons.ac_unit_rounded), onChange: (String ) {  }, maxLines: 2,),
               const SizedBox(height: 50,),
-              Consumer<AuthProvider>(
-                  builder: (context, authProvider,child) {
-                    return States.registerState==RegisterState.LOADING?Center(child: CircularProgressIndicator()):CustomButton(text: "ارسال",onPressed: () async {
+              //Consumer<AuthProvider>(
+                  //builder: (context, authProvider,child) {
+                   // return States.registerState==RegisterState.LOADING?Center(child: CircularProgressIndicator()):
+                    CustomButton(text: "ارسال",onPressed: () async {
                       if(passwordController.text.isEmpty || passwordController.text.isEmpty){
                         toast("من فضلك املأ جميع البيانات", context);
                         return;
                       }
-                      Map<String,dynamic> formData ={
+                     /* Map<String,dynamic> formData ={
                         "phone": phoneNumberController.text,
                         "newpassword": passwordController.text,
                         "type": "user"
@@ -54,10 +55,10 @@ class _ForgotPassScreenState extends State<ForgotPassScreen> {
                       toast(userModel['msg'], context);
                       if(userModel['status']){
                         Navigator.pop(context);
-                      }
-                    }, color: Colors.transparent,);
-                  }
-              )
+                      }*/
+                    }, color: Colors.transparent,),
+                 // }
+              //)
             ],
           ),
         ),

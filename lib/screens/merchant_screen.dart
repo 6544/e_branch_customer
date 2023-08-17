@@ -1,7 +1,8 @@
 import 'dart:io';
+import 'package:e_branch_customer/screens/productdetails_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
 import '../components/components.dart';
 import '../helpers/config.dart';
 import '../helpers/navigations.dart';
@@ -14,15 +15,16 @@ import 'chats_screen.dart';
 import 'home_screen.dart';
 
 class MerchantScreen extends StatefulWidget {
-  String id,name;
-  MerchantScreen({Key? key,required this.id,required this.name}) : super(key: key);
-
+ // String id,name;
+  MerchantScreen({Key? key, required this.imageurl, required this.name,/*required this.id,required this.name*/}) : super(key: key);
+final String imageurl;
+final String name;
   @override
   _MerchantScreenState createState() => _MerchantScreenState();
 }
 
 class _MerchantScreenState extends State<MerchantScreen> {
-  late List<Widget> images;
+  /*late List<Widget> images;
   late ProductsModel productsModel;
   late CategoriesModel categoriesModel;
   late SlidersModel slidersModel;
@@ -40,15 +42,15 @@ class _MerchantScreenState extends State<MerchantScreen> {
       productsModel = await Provider.of<HomeProvider>(context,listen: false).getMarketOffers(widget.id);
       categoriesModel = (await Provider.of<HomeProvider>(context,listen: false).getMarketCategories(widget.id))!;
     });
-  }
+  }*/
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(text: "مراسلة المتجر",leading: IconButton(onPressed: (){
+      appBar: CustomAppBar(text: " ${widget.name}",leading: IconButton(onPressed: (){
         Navigation.removeUntilNavigator(context, HomeScreen());
       }, icon: Icon(Icons.close,color: Colors.red,)),actions: [
         IconButton(onPressed: (){
-          Navigation.mainNavigator(context, ChatsScreen(merchantId: widget.id,merchantName: widget.name));
+        //  Navigation.mainNavigator(context, ChatsScreen(merchantId: widget.id,merchantName: widget.name));
         }, icon: Icon(Icons.chat))
       ]),
       body: Stack(
@@ -57,18 +59,20 @@ class _MerchantScreenState extends State<MerchantScreen> {
           SingleChildScrollView(
             child: Column(
               children: [
-                Consumer<HomeProvider>(
-                    builder: (context, sliders,child) {
-                      if(images==null){
+                /*Consumer<HomeProvider>(
+                    builder: (context, sliders,child) {*/
+                     /* if(images==null){
                         return Center(child: CircularProgressIndicator());
                       }
                       if(images.isEmpty){
                         return SizedBox();
-                      }
-                      return SizedBox(
+                      }*/
+                      /*return*/ SizedBox(
                         height: 170.0,
                         width: double.infinity,
-                        child:Container() /*Carousel(
+                        child:Container(
+                          child: Image.network(widget.imageurl,fit: BoxFit.fill,),
+                        ) /*Carousel(
                           images: images,
                           dotSize: 4.0,
                           dotSpacing: 15.0,
@@ -76,9 +80,9 @@ class _MerchantScreenState extends State<MerchantScreen> {
                           indicatorBgPadding: 5.0,
                           borderRadius: true,
                         ),*/
-                      );
-                    }
-                ),
+                      ),
+                 //   }
+              //  ),
                 const SizedBox(height: 30,),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
@@ -101,7 +105,8 @@ class _MerchantScreenState extends State<MerchantScreen> {
                   ],
                 ),
                 const SizedBox(height: 18,),
-                Consumer<HomeProvider>(
+                Center(child: CustomText(textDecoration: TextDecoration.none,text: "لا يوجد منتجات لعرضها", fontSize: 18)),
+                /*Consumer<HomeProvider>(
                     builder: (context, homeProvider,child) {
                       if(productsModel==null){
                         return Center(child: CircularProgressIndicator());
@@ -143,8 +148,9 @@ class _MerchantScreenState extends State<MerchantScreen> {
                         ],
                       );
                     }
-                ),
+                ),*/
                 const SizedBox(height: 15,),
+
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
@@ -165,7 +171,43 @@ class _MerchantScreenState extends State<MerchantScreen> {
                     ),
                   ],
                 ),
-                Consumer<HomeProvider>(
+                StreamBuilder(
+                  stream: FirebaseFirestore.instance
+                      .collection("categories")
+                      .snapshots(),
+                  builder: (context,
+                      AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return  Center(
+                        child: CircularProgressIndicator(),
+                      );
+
+                    }
+
+                    return snapshot.data!.docs.length == 0
+                        ? Center(child: CustomText(textDecoration: TextDecoration.none,text: "حدث خطأ", fontSize: 16))
+                        :Padding(
+                      padding: const EdgeInsets.all(18.0),
+                      child: Directionality(
+                        textDirection: TextDirection.rtl,
+                        child: GridView.count(
+                          shrinkWrap: true,
+                          physics: NeverScrollableScrollPhysics(),
+                          crossAxisCount: 2,
+                          crossAxisSpacing: 10,
+                          mainAxisSpacing: 15,
+                          childAspectRatio: (150 / 100),
+                          children: List.generate(snapshot.data!.docs.length, (index) {
+                            return CategoriesCard(name: snapshot.data!.docs[index]["name"],image: snapshot.data!.docs[index]["imageurl"],onTap: (){
+                              //   Navigation.mainNavigator(context, ProductsScreen(name: categoriesModel.services[index].name,id: categoriesModel.services![index].id.toString()));
+                            },);
+                          }),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+             /*   Consumer<HomeProvider>(
                     builder: (context, homeProvider,child) {
                       if(categoriesModel == null){
                         return Center(child: CircularProgressIndicator());
@@ -194,7 +236,7 @@ class _MerchantScreenState extends State<MerchantScreen> {
                         ),
                       );
                     }
-                ),
+                ),*/
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
@@ -215,7 +257,45 @@ class _MerchantScreenState extends State<MerchantScreen> {
                     ),
                   ],
                 ),
-                ChangeNotifierProvider(
+                StreamBuilder(
+                  stream: FirebaseFirestore.instance
+                      .collection("specialproducts")
+                  // .orderBy(
+                  //   "datePublished",
+                  //   descending: true,
+                  // )
+                      .snapshots(),
+                  builder: (context,
+                      AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return  Center(
+                        child: CircularProgressIndicator(),
+                      );
+
+                    }
+
+                    return snapshot.data!.docs.length == 0
+                        ? Center(child: CustomText(text: "لا يوجد منتجات ", fontSize: 16, textDecoration: TextDecoration.none,))
+                        : Padding(
+                      padding: const EdgeInsets.all(18.0),
+                      child: Directionality(
+                        textDirection: TextDirection.rtl,
+                        child: GridView.count(
+                          shrinkWrap: true,
+                          physics: NeverScrollableScrollPhysics(),
+                          crossAxisCount: 2,
+                          childAspectRatio: (Config.responsiveHeight(context)*0.15 / 160),
+                          children: List.generate(snapshot.data!.docs.length, (index) {
+                            return ProductCard(name:snapshot.data!.docs[index]["name"],rate:0.0,price: snapshot.data!.docs[index]["price"].toString(), catName:snapshot.data!.docs[index]["category"],image:snapshot.data!.docs[index]["imageurl"],onTap: (){
+                                Navigation.mainNavigator(context, ProductDetailsScreen(product:snapshot.data!.docs[index], offer: true, fromOrder: false,));
+                            }, offer: '',);
+                          }),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+                /*ChangeNotifierProvider(
                   create: (BuildContext context) => HomeProvider()..getBestSeller(widget.id),
                   child: Selector<HomeProvider,MarketOffersState>(
                       selector: (context,provider){
@@ -248,7 +328,7 @@ class _MerchantScreenState extends State<MerchantScreen> {
                         );
                       }
                   ),
-                ),
+                ),*/
               ],
             ),
           ),

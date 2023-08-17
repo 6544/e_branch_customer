@@ -71,10 +71,10 @@ class _CartScreenState extends State<CartScreen> {
                                 itemBuilder: (context,index){
                                   return CartCard(text: snapshot.data!.docs[index]["postTitle"],image:snapshot.data!.docs[index]["postPic"],desc:snapshot.data!.docs[index]["description"],price:snapshot.data!.docs[index]["postPrice"] /*homeProvider.cartModel.data![index].offer==null?homeProvider.cartModel.data![index].price.toString():(double.parse(homeProvider.cartModel.data![index].price.toString())-(double.parse(homeProvider.cartModel.data![index].price.toString())*(double.parse(homeProvider.cartModel.data![index].offer.toString())/100))).toString()*/,
                                     onIncrement: (){
-                                      if(data.quantities[index]!=data.cartModel.data![index].amount){
+                                      /*if(data.quantities[index]!=data.cartModel.data![index].amount){
                                         data.changeQuantity(index, data.quantities[index]+1);
                                         data.addToTotal(data.cartModel.data![index].offer==null?data.cartModel.data![index].price:(double.parse(data.cartModel.data![index].price.toString())-(double.parse(data.cartModel.data![index].price.toString())*(double.parse(data.cartModel.data![index].offer.toString())/100))));
-                                      }
+                                      }*/
                                     },
                                     onDecrement: (){
                                       /*if(homeProvider.quantities[index]!=1){
@@ -99,7 +99,7 @@ class _CartScreenState extends State<CartScreen> {
                               children: [
                                 Padding(
                                   padding: const EdgeInsets.only(left: 10),
-                                  child: CustomText(textDecoration: TextDecoration.none,text: "الإجمالي :${data.total}  ريال ", fontSize: 16,fontWeight: FontWeight.w600,),
+                                  child: CustomText(textDecoration: TextDecoration.none,text: "الإجمالي :", fontSize: 16,fontWeight: FontWeight.w600,),
                                 ),
                                 const Spacer(),
                                      Column(
@@ -183,15 +183,16 @@ class _CartScreenState extends State<CartScreen> {
                                     double dictance = Geolocator.distanceBetween(
                                         double.parse(location.latitude.toString()),
                                         double.parse(location.longitude.toString()),
-                                        double.parse(data.cartModel.lat),
-                                        double.parse(data.cartModel.lang));
+                                        double.parse(/*data.cartModel.lat*/ "1"),
+                                        double.parse("1"/*data.cartModel.lang*/)
+                                    );
                                     print(dictance);
                                     if (dictance >= 40 * 1000) {
                                       type = "charger";
                                     } else {
                                       type = "driver";
                                     }
-                                    print(data.cartModel.price);
+                                  //  print(data.cartModel.price);
                                     setState(() {});
                                   }
                                   addressController.text = address;

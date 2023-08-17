@@ -9,8 +9,10 @@ import '../../helpers/helperfunctions.dart';
 import '../../helpers/navigations.dart';
 import '../../models/authmodels/user_model.dart';
 import '../../providers/auth_provider.dart';
+import '../../services/firebase_auth_methods.dart';
 import '../../states/auth_states.dart';
-import 'auth_screen.dart';
+import '../home_screen.dart';
+import 'forgotpass_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -60,7 +62,29 @@ class _LoginScreenState extends State<LoginScreen> {
                   ],
                 ),
                 const SizedBox(height: 50,),
-                Consumer<AuthProvider>(
+             //   Consumer<AuthProvider>(
+               //     builder: (context, authProvider,child) {
+                    //  return States.registerState==RegisterState.LOADING?const Center(child: CircularProgressIndicator()):
+    CustomButton(text: "دخول",onPressed: () async {
+                        String? fcm = await getToken();
+                        String res = await FirebaseAuthMethods().userLogin(
+                          email: phoneNumberController.text,
+                          password: passwordController.text,
+                          context: context,
+                        );
+                        if (res == "success") {
+                          toast("تم التسجيل بنجاح", context);
+                          Navigator.of(context).pushReplacement(
+                            MaterialPageRoute(
+                              builder: (context) => HomeScreen(),
+                            ),
+                          );
+                        } else {
+                        }
+                      }, color: Colors.transparent,),
+                  //  }
+               // )
+                /*Consumer<AuthProvider>(
                     builder: (context, authProvider,child) {
                       return States.registerState==RegisterState.LOADING?Center(child: CircularProgressIndicator()):CustomButton(text: "دخول",onPressed: () async {
                         String? fcm = await getToken();
@@ -83,7 +107,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         }
                       }, color: Colors.transparent,);
                     }
-                )
+                )*/
               ],
             ),
           ),

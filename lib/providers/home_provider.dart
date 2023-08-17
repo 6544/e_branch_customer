@@ -15,7 +15,22 @@ import '../repositories/home_repo.dart';
 import '../states/homes_states.dart';
 
 class HomeProvider extends ChangeNotifier{
-  Future<CategoriesModel> getCategories()async{
+  Future<MarketsModel> getMarketsWithLocation(lat,lang)async{
+    HomeStates.marketsState = MarketsState.LOADING;
+    notifyListeners();
+   // Map response = await HomeRepositories.getMarketsWithLocation(lat,lang);
+    try{
+      // MarketsModel marketsModel = MarketsModel.fromJson(response);
+      HomeStates.marketsState = MarketsState.LOADED;
+      notifyListeners();
+      return throw Exception(""); //marketsModel;
+    }catch(e){
+      HomeStates.marketsState = MarketsState.ERROR;
+      notifyListeners();
+      return Future.error(e);
+    }
+  }
+  /*Future<CategoriesModel> getCategories()async{
     HomeStates.catState = CatState.LOADING;
     notifyListeners();
     Map response = await HomeRepositories.getCategories() ;
@@ -29,9 +44,9 @@ class HomeProvider extends ChangeNotifier{
       notifyListeners();
       return Future.error(e);
     }
-  }
+  }*/
 
-  Future<MarketsModel> getMarkets(id)async{
+/*  Future<MarketsModel> getMarkets(id)async{
     HomeStates.marketsState = MarketsState.LOADING;
     notifyListeners();
     Map response = await HomeRepositories.getMarkets(id);
@@ -198,9 +213,9 @@ class HomeProvider extends ChangeNotifier{
       notifyListeners();
       return Future.error(e);
     }
-  }
+  }*/
 
-  changeQuantity(index,quantity){
+/*  changeQuantity(index,quantity){
     quantities.insert(index, quantity);
     quantities.removeAt(index+1);
     notifyListeners();
@@ -214,13 +229,14 @@ class HomeProvider extends ChangeNotifier{
   removeFromTotal(price){
     _total = _total-price;
     notifyListeners();
-  }
-
+  }*/
+  int shippingType = 0;
   changeShippingType(value){
     shippingType = value;
     notifyListeners();
   }
 
+/*
   Future<CategoriesModel?> getMarketCategories(id)async{
     HomeStates.marketCategoriesState = MarketCategoriesState.LOADING;
     notifyListeners();
@@ -276,6 +292,7 @@ class HomeProvider extends ChangeNotifier{
       return Future.error(e);
     }
   }
+*/
 
 
   late LatLng _position;
@@ -292,7 +309,7 @@ class HomeProvider extends ChangeNotifier{
     notifyListeners();
   }
 
-  makeOrder(formData)async{
+ /* makeOrder(formData)async{
     HomeStates.makeOrderState = MakeOrderState.LOADING;
     notifyListeners();
     try{
@@ -427,6 +444,6 @@ class HomeProvider extends ChangeNotifier{
       notifyListeners();
       return Future.error(e);
     }
-  }
+  }*/
 
 }

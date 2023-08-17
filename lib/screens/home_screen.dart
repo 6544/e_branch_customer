@@ -1,5 +1,7 @@
 import 'package:another_flushbar/flushbar.dart';
+import 'package:e_branch_customer/screens/merchant_screen.dart';
 import 'package:e_branch_customer/screens/productdetails_screen.dart';
+import 'package:e_branch_customer/screens/stores_screen.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
@@ -11,7 +13,7 @@ import '../helpers/helperfunctions.dart';
 import '../helpers/navigations.dart';
 import '../models/home_models/categories_model.dart';
 import '../models/home_models/markets_model.dart';
-import '../models/home_models/products_model.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import '../providers/home_provider.dart';
 import '../states/homes_states.dart';
 import 'cart_screen.dart';
@@ -47,7 +49,7 @@ class _HomeScreenState extends State<HomeScreen> {
     fetchDataWithinNotification();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async{
       currentPosition = await determinePosition();
-      marketsModel = await Provider.of<HomeProvider>(context,listen: false).getMarketsWithLocation(currentPosition.latitude,currentPosition.longitude);
+     marketsModel = await Provider.of<HomeProvider>(context,listen: false).getMarketsWithLocation(currentPosition.latitude,currentPosition.longitude);
       mapController.moveCamera(CameraUpdate.newCameraPosition(CameraPosition(target: LatLng(currentPosition.latitude,currentPosition.longitude),zoom: 16),));
       for (var element in marketsModel.vendors!){
         _markers.add(
@@ -81,163 +83,147 @@ class _HomeScreenState extends State<HomeScreen> {
         Navigation.mainNavigator(context, CartScreen());
       }), actions: []),
       endDrawer: DrawerScreen(),
-      body: Column(
-        children: [
-          SizedBox(
-            height: 190.0,
-            width: double.infinity,
-            child: GoogleMap(
-              onMapCreated: onMapCreated,
-              initialCameraPosition: CameraPosition(target: LatLng(30,29)),
-              myLocationButtonEnabled: true,
-              myLocationEnabled: true,
-              markers: _markers,
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            SizedBox(
+              height: 190.0,
+              width: double.infinity,
+              child: GoogleMap(
+                onMapCreated: onMapCreated,
+                initialCameraPosition: CameraPosition(target: LatLng(30,29)),
+                myLocationButtonEnabled: true,
+                myLocationEnabled: true,
+                markers: _markers,
+              ),
             ),
-          ),
-          const SizedBox(height: 5,),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 7),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                IconButton(icon: Icon(Icons.email,color: pageIndex!=3?Config.buttonColor:Config.mainColor,size: 30,), onPressed: (){
-                  pageIndex = 3;
-                  setState(() {});
-                }),
-                IconButton(icon: Icon(Icons.remove_red_eye,color: pageIndex!=2?Config.buttonColor:Config.mainColor,size: 30,), onPressed: () async {
-                  pageIndex = 2;
-                  setState(() {});
-                /*  if(productsModel==null)
-                    productsModel = await context.read<HomeProvider>().getRandomProducts();
-                }*/}),
-                IconButton(icon: Icon(Icons.grid_view,color: pageIndex!=1?Config.buttonColor:Config.mainColor,size: 30,), onPressed: () async {
-                  pageIndex = 1;
-                  setState(() {});
-                 // if(catModel==null)
-                   // catModel = await context.read<HomeProvider>().getCategories();
-                }),
-                IconButton(icon: Icon(Icons.search,color: pageIndex!=0?Config.buttonColor:Config.mainColor,size: 30,), onPressed: (){
-                  pageIndex = 0;
-                  setState(() {});
-                }),
-              ],
+            const SizedBox(height: 5,),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 7),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  IconButton(icon: Icon(Icons.email,color: pageIndex!=3?Config.buttonColor:Config.mainColor,size: 30,), onPressed: (){
+                    pageIndex = 3;
+                    setState(() {});
+                  }),
+                  IconButton(icon: Icon(Icons.remove_red_eye,color: pageIndex!=2?Config.buttonColor:Config.mainColor,size: 30,), onPressed: () async {
+                    pageIndex = 2;
+                    setState(() {});
+                  /*  if(productsModel==null)
+                      productsModel = await context.read<HomeProvider>().getRandomProducts();
+                  }*/}),
+                  IconButton(icon: Icon(Icons.grid_view,color: pageIndex!=1?Config.buttonColor:Config.mainColor,size: 30,), onPressed: () async {
+                    pageIndex = 1;
+                    setState(() {});
+                   // if(catModel==null)
+                     // catModel = await context.read<HomeProvider>().getCategories();
+                  }),
+                  IconButton(icon: Icon(Icons.search,color: pageIndex!=0?Config.buttonColor:Config.mainColor,size: 30,), onPressed: (){
+                    pageIndex = 0;
+                    setState(() {});
+                  }),
+                ],
+              ),
             ),
-          ),
-          Container(
-            color: Config.buttonColor.withOpacity(0.07),
-            child: Padding(
-              padding: const EdgeInsets.all(15.0),
-              child: Container(
-                height: Config.responsiveHeight(context)-380,
-                child: pageIndex==1?Consumer<HomeProvider>(
-                    builder: (context, homeProvider,child) {
-                      if(cats.length==0 || HomeStates.catState == CatState.LOADING){
-                        return Center(child: CircularProgressIndicator());
-                      }else if(cats.length==0){
-                        return CustomText(text: "لا يوجد أقسام الان", fontSize: 18, textDecoration: TextDecoration.none,);
-                      }
-                      if(HomeStates.catState == CatState.ERROR){
-                        return Center(child: CustomText(text: "حدث خطأ", fontSize: 16, textDecoration: TextDecoration.none,));
-                      }
-
-                      return Directionality(
-                        textDirection: TextDirection.rtl,
-                        child: GridView.count(
-                          shrinkWrap: true,
-                          crossAxisCount: 2,
-                          crossAxisSpacing: 30,
-                          mainAxisSpacing: 25,
-                          childAspectRatio: (150 / 43),
-                          children: List.generate(cats.length, (index) {
-                            return InkWell(
-                              onTap: (){
-                             //   Navigation.mainNavigator(context, StoresScreen(catId: catModel.services[index].id,catName: catModel.services![index].name));
-                              },
-                              child: Container(
-                                width: double.infinity,
-                                height: 43,
-                                alignment: Alignment.center,
-                                child: CustomText(text:cats[index], fontSize: 14,color: Config.mainColor, textDecoration: TextDecoration.none,),
-                                decoration: BoxDecoration(
-                                    color: Color(0xffffffff),
-                                    border: Border.all(color: Config.buttonColor.withOpacity(0.6),width: 2),
-                                    borderRadius: BorderRadius.circular(10)
-                                ),
-                              ),
-                            );
-                          }),
-                        ),
-                      );
-                    }
-                ):pageIndex==0?Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    CustomInput(controller: searchController, hint: "اكتب اسم المتجر", textInputType: TextInputType.text,suffixIcon: IconButton(icon: Icon(Icons.search,size: 37,color: Config.mainColor,), onPressed: (){}), onTap: () {  }, prefixIcon:  Icon(Icons.phone,color: Config.mainColor,), onChange: (String ) {  }, maxLines: 1,),
-                    const SizedBox(height: 30,),
-                    CustomButton(text: "بحث",onPressed: (){
-                      List<Vendors> vendors = [];
-                      marketsModel.vendors!.forEach((element) {
-
-                        if(element.name!.toLowerCase().contains(searchController.text.toLowerCase())){
-                          vendors.add(element);
+            Container(
+              color: Config.buttonColor.withOpacity(0.07),
+              child: Padding(
+                padding: const EdgeInsets.all(15.0),
+                child: Container(
+                  height: Config.responsiveHeight(context)-380,
+                  child: pageIndex==1?
+                //  Consumer<HomeProvider>(
+                  //    builder: (context, homeProvider,child) {
+                /*        if(cats.length==0 *//*|| HomeStates.catState == CatState.LOADING*//*){
+                          return Center(child: CircularProgressIndicator());
+                        }else if(cats.length==0){
+                          return CustomText(text: "لا يوجد أقسام الان", fontSize: 18, textDecoration: TextDecoration.none,);
                         }
-                      });
-                 //     Navigation.mainNavigator(context, StoresScreen(catId: null,catName: null,vendors:vendors ));
+                        if(HomeStates.catState == CatState.ERROR){
+                          return Center(child: CustomText(text: "حدث خطأ", fontSize: 16, textDecoration: TextDecoration.none,));
+                        }
 
-                    }, color: Colors.transparent,)
-                  ],
-                ):pageIndex==2?
-                StreamBuilder(
-                  stream: FirebaseFirestore.instance
-                      .collection("specialproducts")
-                  // .orderBy(
-                  //   "datePublished",
-                  //   descending: true,
-                  // )
-                      .snapshots(),
-                  builder: (context,
-                      AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return  Center(
-                        child: CircularProgressIndicator(),
-                      );
+                        return*/ Directionality(
+                          textDirection: TextDirection.rtl,
+                          child: GridView.count(
+                            shrinkWrap: true,
+                            crossAxisCount: 2,
+                            crossAxisSpacing: 30,
+                            mainAxisSpacing: 25,
+                            childAspectRatio: (150 / 43),
+                            children: List.generate(cats.length, (index) {
+                              return InkWell(
+                                onTap: (){
+                                 Navigation.mainNavigator(context, StoresScreen(/*catId: catModel.services[index].id,catName: catModel.services![index].name*/));
+                                },
+                                child: Container(
+                                  width: double.infinity,
+                                  height: 43,
+                                  alignment: Alignment.center,
+                                  child: CustomText(text:cats[index], fontSize: 14,color: Config.mainColor, textDecoration: TextDecoration.none,),
+                                  decoration: BoxDecoration(
+                                      color: Color(0xffffffff),
+                                      border: Border.all(color: Config.buttonColor.withOpacity(0.6),width: 2),
+                                      borderRadius: BorderRadius.circular(10)
+                                  ),
+                                ),
+                              );
+                            }),
+                          ),
+                        ):
+                  //    }
+                //  )
+                      pageIndex==0?Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      CustomInput(controller: searchController, hint: "اكتب اسم المتجر", textInputType: TextInputType.text,suffixIcon: IconButton(icon: Icon(Icons.search,size: 37,color: Config.mainColor,), onPressed: (){}), onTap: () {  }, prefixIcon:  SizedBox.shrink(), onChange: (String ) {  }, maxLines: 1,),
+                      const SizedBox(height: 30,),
+                      StreamBuilder(
+                        stream: FirebaseFirestore.instance
+                            .collection("stores").where("name",isEqualTo:searchController.text.toString()).snapshots(),
+                        builder: (context,
+                            AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
+                          if (snapshot.connectionState == ConnectionState.waiting) {
+                            return  Center(
+                              child: CircularProgressIndicator(),
+                            );
 
-                    }
+                          }else if( snapshot.data!.docs.length == 0){
+                             toast("لا يوجد فرع بهذا الاسم حاول مرة أخرى", context);
+                          }
 
-                    return snapshot.data!.docs.length == 0
-                        ? CustomText(text: "لا يوجد منتجات الان", fontSize: 18, textDecoration: TextDecoration.none,)
-                        : Padding(
-                      padding: const EdgeInsets.all(18.0),
-                      child: Directionality(
-                        textDirection: TextDirection.rtl,
-                        child: GridView.count(
-                          shrinkWrap: true,
-                          crossAxisCount: 2,
-                          crossAxisSpacing: 10,
-                          mainAxisSpacing: 15,
-                          childAspectRatio: (Config.responsiveHeight(context)*0.131 / 150),
-                          children: List.generate(snapshot.data!.docs.length, (index) {
-                            return ProductCard(name: snapshot.data!.docs[index]["name"],price: snapshot.data!.docs[index]["price"].toString(),image: snapshot.data!.docs[index]["imageurl"],onTap: (){
-                              Navigation.mainNavigator(context, ProductDetailsScreen(product:snapshot.data!.docs[index], offer: true, fromOrder: false,));
-                            }, catName:snapshot.data!.docs[index]["category"] , offer: '',);
-                          }),
-                        ),
+                          return  CustomButton(text: "بحث",onPressed: (){
+
+                            Navigation.mainNavigator(context, MerchantScreen(imageurl: snapshot.data!.docs.first["imageurl"], name: snapshot.data!.docs.first["name"],));
+
+                          }, color: Colors.transparent,);
+                        },
                       ),
-                    );
-                  },
-                )
-                /*Consumer<HomeProvider>(
-                    builder: (context, homeProvider,child) {
-                      if(productsModel==null){
-                        return Center(child: CircularProgressIndicator());
-                      }else if(productsModel.data!.length == 0){
-                        return CustomText(text: "لا يوجد منتجات الان", fontSize: 18, textDecoration: TextDecoration.none,);
+
+                    ],
+                  ):pageIndex==2?
+                  StreamBuilder(
+                    stream: FirebaseFirestore.instance
+                        .collection("specialproducts")
+                    // .orderBy(
+                    //   "datePublished",
+                    //   descending: true,
+                    // )
+                        .snapshots(),
+                    builder: (context,
+                        AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return  Center(
+                          child: CircularProgressIndicator(),
+                        );
+
                       }
-                      if(HomeStates.marketOffersState==MarketOffersState.ERROR){
-                        return CustomText(text: "حدث خطأ", fontSize: 16, textDecoration: TextDecoration.none,);
-                      }
-                      return Padding(
+
+                      return snapshot.data!.docs.length == 0
+                          ? CustomText(text: "لا يوجد منتجات الان", fontSize: 18, textDecoration: TextDecoration.none,)
+                          : Padding(
                         padding: const EdgeInsets.all(18.0),
                         child: Directionality(
                           textDirection: TextDirection.rtl,
@@ -246,52 +232,100 @@ class _HomeScreenState extends State<HomeScreen> {
                             crossAxisCount: 2,
                             crossAxisSpacing: 10,
                             mainAxisSpacing: 15,
-                            childAspectRatio: (Config.responsiveHeight(context)*0.131 / 160),
-                            children: List.generate(productsModel.data!.length, (index) {
-                              return ProductCard(name: productsModel.data![index].name!,price: productsModel.data![index].price.toString(),image: productsModel.data![index].photo!,onTap: (){
-                                //Navigation.mainNavigator(context, ProductDetailsScreen(product: productsModel.data[index],));
-                              }, catName: 'ملابس', offer: '',);
+                            childAspectRatio: (Config.responsiveHeight(context)*0.131 / 150),
+                            children: List.generate(snapshot.data!.docs.length, (index) {
+                              return ProductCard(name: snapshot.data!.docs[index]["name"],price: snapshot.data!.docs[index]["price"].toString(),image: snapshot.data!.docs[index]["imageurl"],onTap: (){
+                                Navigation.mainNavigator(context, ProductDetailsScreen(product:snapshot.data!.docs[index], offer: true, fromOrder: false,));
+                              }, catName:snapshot.data!.docs[index]["category"] , offer: '',);
                             }),
                           ),
                         ),
                       );
-                    }
-                )*/:Form(
-                  key: _formState,
-                  child: SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        CustomInput( onTap: () {  }, prefixIcon:  Icon(Icons.phone,color: Config.mainColor,), onChange: (String ) {  }, maxLines: 1,controller: nameController, hint: "الاسم بالكامل", textInputType: TextInputType.text,suffixIcon: Icon(Icons.person,color: Config.mainColor,),),
-                        const SizedBox(height: 15,),
-                        CustomInput( onTap: () {  }, prefixIcon:  Icon(Icons.phone,color: Config.mainColor,), onChange: (String ) {  }, maxLines: 1,controller: emailController, hint: "البريد الإلكتروني", textInputType: TextInputType.emailAddress,suffixIcon: Icon(Icons.email,color: Config.mainColor,),),
-                        const SizedBox(height: 15,),
-                        CustomInput( onTap: () {  }, prefixIcon:  Icon(Icons.phone,color: Config.mainColor,), onChange: (String ) {  }, maxLines: 1,controller: phoneNumberController, hint: "رقم الهاتف", textInputType: TextInputType.phone,suffixIcon: Icon(Icons.phone,color: Config.mainColor,),),
-                        const SizedBox(height: 30,),
-                        CustomInput( onTap: () {  }, prefixIcon:  Icon(Icons.phone,color: Config.mainColor,), onChange: (String ) {  }, maxLines: 1,controller: msgController, hint: "الرسالة", textInputType: TextInputType.text,suffixIcon: Padding(
-                          padding: const EdgeInsets.only(bottom: 85),
-                          child: Icon(Icons.chat,color: Config.mainColor,),
-                        )),
-                        const SizedBox(height: 50,),
-                        CustomButton(text: "ارسال",onPressed: () async {
-                          if(_formState.currentState!.validate()) {
-                            Map response= await context.read<HomeProvider>().contactUs({"name": nameController.text,"email": emailController.text,"phone": phoneNumberController.text,"messages":msgController.text});
-                            toast(response['msg'], context);
-                            if(response['status']){
-                              nameController.text="";
-                              emailController.text="";
-                              phoneNumberController.text="";
-                              msgController.text="";
-                            }
-                          }
-                        }, color: Colors.transparent,)
-                      ],
+                    },
+                  )
+                  /*Consumer<HomeProvider>(
+                      builder: (context, homeProvider,child) {
+                        if(productsModel==null){
+                          return Center(child: CircularProgressIndicator());
+                        }else if(productsModel.data!.length == 0){
+                          return CustomText(text: "لا يوجد منتجات الان", fontSize: 18, textDecoration: TextDecoration.none,);
+                        }
+                        if(HomeStates.marketOffersState==MarketOffersState.ERROR){
+                          return CustomText(text: "حدث خطأ", fontSize: 16, textDecoration: TextDecoration.none,);
+                        }
+                        return Padding(
+                          padding: const EdgeInsets.all(18.0),
+                          child: Directionality(
+                            textDirection: TextDirection.rtl,
+                            child: GridView.count(
+                              shrinkWrap: true,
+                              crossAxisCount: 2,
+                              crossAxisSpacing: 10,
+                              mainAxisSpacing: 15,
+                              childAspectRatio: (Config.responsiveHeight(context)*0.131 / 160),
+                              children: List.generate(productsModel.data!.length, (index) {
+                                return ProductCard(name: productsModel.data![index].name!,price: productsModel.data![index].price.toString(),image: productsModel.data![index].photo!,onTap: (){
+                                  //Navigation.mainNavigator(context, ProductDetailsScreen(product: productsModel.data[index],));
+                                }, catName: 'ملابس', offer: '',);
+                              }),
+                            ),
+                          ),
+                        );
+                      }
+                  )*/:Form(
+                    key: _formState,
+                    child: SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          CustomInput( onTap: () {  }, prefixIcon: SizedBox.shrink(), onChange: (String ) {  }, maxLines: 1,controller: nameController, hint: "الاسم بالكامل", textInputType: TextInputType.text,suffixIcon: Icon(Icons.person,color: Config.mainColor,),),
+                          const SizedBox(height: 15,),
+                          CustomInput( onTap: () {  }, prefixIcon:   SizedBox.shrink(), onChange: (String ) {  }, maxLines: 1,controller: emailController, hint: "البريد الإلكتروني", textInputType: TextInputType.emailAddress,suffixIcon: Icon(Icons.email,color: Config.mainColor,),),
+                          const SizedBox(height: 15,),
+                          CustomInput( onTap: () {  }, prefixIcon:  SizedBox.shrink(), onChange: (String ) {  }, maxLines: 1,controller: phoneNumberController, hint: "رقم الهاتف", textInputType: TextInputType.phone,suffixIcon: Icon(Icons.phone,color: Config.mainColor,),),
+                          const SizedBox(height: 30,),
+                          CustomInput( onTap: () {  }, prefixIcon:   SizedBox.shrink(), onChange: (String ) {  }, maxLines: 1,controller: msgController, hint: "الرسالة", textInputType: TextInputType.text,suffixIcon: Padding(
+                            padding: const EdgeInsets.only(bottom: 85),
+                            child: Icon(Icons.chat,color: Config.mainColor,),
+                          )),
+                          const SizedBox(height: 50,),
+                          CustomButton(text: "ارسال",onPressed: () async {
+                            toast("تم الارسال بنجاح", context);
+                            await FirebaseFirestore.instance
+                                .collection("messages")
+                                .doc()
+                                .set({
+                              "sentby": nameController.text,
+                              "email": emailController.text,
+                              "phoneNo": phoneNumberController.text,
+                              "text": msgController.text
+                            });
+                            toast("تم الارسال بنجاح", context);
+                            setState(() {
+                              emailController.clear();
+                              msgController.clear();
+                              phoneNumberController.clear();
+                              nameController.clear();
+                            });
+                          /*  if(_formState.currentState!.validate()) {
+                              Map response= await context.read<HomeProvider>().contactUs({"name": nameController.text,"email": emailController.text,"phone": phoneNumberController.text,"messages":msgController.text});
+                              toast(response['msg'], context);
+                              if(response['status']){
+                                nameController.text="";
+                                emailController.text="";
+                                phoneNumberController.text="";
+                                msgController.text="";
+                              }
+                            }*/
+                          }, color: Colors.transparent,)
+                        ],
+                      ),
                     ),
                   ),
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -330,9 +364,9 @@ class _HomeScreenState extends State<HomeScreen> {
         borderRadius: BorderRadius.circular(8),
       ).show(context);
 
-      Provider.of<HomeProvider>(context,listen: false).getChatsList();
-      Provider.of<HomeProvider>(context,listen: false).getCurrentOrder("current-orders");
-      Provider.of<HomeProvider>(context,listen: false).getCurrentOrder("old-orders");
+    //  Provider.of<HomeProvider>(context,listen: false).getChatsList();
+     // Provider.of<HomeProvider>(context,listen: false).getCurrentOrder("current-orders");
+     // Provider.of<HomeProvider>(context,listen: false).getCurrentOrder("old-orders");
       setState(() {});
     });
 

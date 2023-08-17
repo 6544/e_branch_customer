@@ -12,6 +12,7 @@ import '../models/authmodels/user_model.dart';
 import '../providers/home_provider.dart';
 import 'authscreens/login_screen.dart';
 import 'authscreens/profile_screen.dart';
+import 'contactus_screen.dart';
 import 'home_screen.dart';
 
 
@@ -31,7 +32,7 @@ class _DrawerScreenState extends State<DrawerScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    fetchProfileData();
+    //fetchProfileData();
   }
   @override
   Widget build(BuildContext context) {
@@ -153,7 +154,7 @@ class _DrawerScreenState extends State<DrawerScreen> {
                       textDirection: TextDirection.rtl,
                       child: ListTile(
                         onTap: (){
-                         // Navigation.mainNavigator(context, ContactUsScreen());
+                          Navigation.mainNavigator(context, ContactUsScreen());
                         },
                         title: CustomText(text:"اتصل بنا", fontSize: 14,color: Colors.white,textDecoration: TextDecoration.none,),
                         leading: Icon(Icons.people,color: Colors.white,),
@@ -222,7 +223,7 @@ class _DrawerScreenState extends State<DrawerScreen> {
     );
   }
 
-  fetchProfileData() async {
+  /*fetchProfileData() async {
     Map<String,dynamic> mapResponse = jsonDecode(await getSavedString("userData", ""));
     Data model = Data.fromJson(mapResponse);
     print(model);
@@ -240,5 +241,5 @@ class _DrawerScreenState extends State<DrawerScreen> {
     }
 
     setState(() {});
-  }
+  }*/
 }

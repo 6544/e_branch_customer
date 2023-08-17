@@ -1,3 +1,4 @@
+/*
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -40,8 +41,8 @@ class _ChatsListScreenState extends State<ChatsListScreen> {
                         children: [
                           ListTile(
                             onTap: () async {
-                              await HomeRepositories.seenChat(provider.allCatsModel.data![index].id);
-                              await provider.getChatsList();
+                           //   await HomeRepositories.seenChat(provider.allCatsModel.data![index].id);
+                            //  await provider.getChatsList();
                              // Navigation.mainNavigator(context, ChatsScreen(merchantId: provider.allCatsModel.data![index].id.toString(),merchantName: provider.allCatsModel.data[index].name));
                             },
                             contentPadding: EdgeInsets.symmetric(vertical: 10,horizontal: 10),
@@ -70,4 +71,4 @@ class _ChatsListScreenState extends State<ChatsListScreen> {
       ),
     );
   }
-}
+}*/

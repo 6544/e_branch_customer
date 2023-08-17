@@ -141,6 +141,34 @@ class FirebaseAuthMethods {
       // now checking and login the user
       UserCredential credential = await _auth.signInWithEmailAndPassword(
           email: email, password: password);
+      //     if (!_auth.currentUser!.emailVerified) {
+      //     await _auth.currentUser!.sendEmailVerification();
+      // const url = "https://mail.google.com/";
+      // html.window.open(url, "Gmail.com");
+      //  showSnakeBar("Verify the email first.", context);
+      //  } else {
+      res = "success";
+      //  }
+    } on FirebaseAuthException catch (err) {
+      if (err.code == "wrong-password") {
+        // showSnakeBar("Invalid Creaditials", context);
+      }
+    } catch (err) {
+      //  showSnakeBar(err.toString(), context);
+    }
+    return res;
+  }
+ /* Future<String> userLogin({
+    required String email,
+    required String password,
+    required BuildContext context,
+  }) async {
+    String res = "Some error occured.";
+    // checking the values are empty or not
+    try {
+      // now checking and login the user
+      UserCredential credential = await _auth.signInWithEmailAndPassword(
+          email: email, password: password);
  //     if (!_auth.currentUser!.emailVerified) {
    //     await _auth.currentUser!.sendEmailVerification();
         // const url = "https://mail.google.com/";
@@ -157,7 +185,7 @@ class FirebaseAuthMethods {
     //  showSnakeBar(err.toString(), context);
     }
     return res;
-  }
+  }*/
   // google sign in
 /*
   Future<String> googleSignInOrSignUp({required BuildContext context}) async {
@@ -239,7 +267,7 @@ class FirebaseAuthMethods {
         "postPrice": productPrice,
         "postTitle": productTitle,
        // "postLocation": postLocation,
-        "datePublished": DateTime.now(),
+      //  "datePublished": DateTime.now(),
       });
       res = "The item is added to the wishlist.";
     } catch (err) {

@@ -62,9 +62,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
     return Scaffold(
       appBar:
           CustomAppBar(text: "تسجيل الدخول", leading: Container(), actions: []),
-      body: Consumer<AuthProvider>(
-          builder: (context, AuthProvider authProvider, child) {
-        return SingleChildScrollView(
+      body:
+      //Consumer<AuthProvider>(
+        //  builder: (context, AuthProvider authProvider, child) {
+        /*return*/ SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.all(20.0),
             child: Form(
@@ -332,8 +333,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
               ),
             ),
           ),
-        );
-      }),
+        ),
+     // }),
     );
   }
 }

@@ -22,7 +22,7 @@ class _SplashscreenState extends State<Splashscreen> {
     super.initState();
     Future.delayed(Duration(seconds: 3),() async {
       String jwt  = await getSavedString("jwt", "");
-      Navigation.removeUntilNavigator(context, FirebaseAuth.instance.currentUser==null?const SignUpScreen():HomeScreen());
+      Navigation.removeUntilNavigator(context, FirebaseAuth.instance.currentUser==null?const LoginScreen():HomeScreen());
     });
   }
   @override
