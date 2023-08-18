@@ -225,7 +225,8 @@ class FirebaseAuthMethods {
       await _auth.sendPasswordResetEmail(email: email);
       res = 'success';
     } on FirebaseException catch (e) {
- //     showSnakeBar(e.message!, context);
+     // ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("حدث خطأ")));
+      log(e.toString());
     }
     return res;
   }

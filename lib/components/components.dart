@@ -537,13 +537,20 @@ class OrderCard extends StatelessWidget {
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(20)),
                 child: DecoratedContainer(
-                  height: 40,
+                  height: 45,
                   width: Config.responsiveWidth(context) * 0.4,
-                  child: CustomText(
-                      text: date,
-                      fontSize: 14,
-                      color: Config.mainColor,
-                      textDecoration: TextDecoration.none),
+                  child: Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Padding(
+                      padding: const EdgeInsets.only(bottom: 5.0),
+                      child: CustomText(
+                          text: date,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Config.mainColor,
+                          textDecoration: TextDecoration.none),
+                    ),
+                  ),
                   radius: 20,
                   borderColor: Colors.black,
                   borderWidth: 2,

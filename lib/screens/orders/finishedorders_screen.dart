@@ -1,4 +1,3 @@
-/*
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -24,7 +23,9 @@ class _FinishedOrdersPageState extends State<FinishedOrdersPage> {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(15.0),
-      child: ChangeNotifierProvider(
+      child: Center(
+        child: CustomText(text: "لا يوجد طلبات منتهية", fontSize: 18, textDecoration: TextDecoration.none,)
+      )/*ChangeNotifierProvider(
         create: (BuildContext context) => HomeProvider()..getCurrentOrder("old-orders"),
         child: Selector<HomeProvider,CurrentOrderState>(
             selector: (context,homeProvider){
@@ -59,7 +60,7 @@ class _FinishedOrdersPageState extends State<FinishedOrdersPage> {
               );
             }
         ),
-      ),
+      ),*/
     );
   }
-}*/
+}

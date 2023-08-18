@@ -1,4 +1,3 @@
-/*
 import 'package:flutter/material.dart';
 
 
@@ -18,7 +17,17 @@ class _OrdersScreenState extends State<OrdersScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: CustomAppBar(text: "الطلبات", leading: Container(), actions: []),
+        appBar: CustomAppBar(text: "الطلبات", leading: Container(), actions: [
+          InkWell(
+            onTap: (){
+              Navigator.pop(context);
+            },
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Icon(Icons.arrow_forward_ios),
+            ),
+          )
+        ]),
         body: DefaultTabController(
           length: 2,
           initialIndex: 1,
@@ -37,7 +46,8 @@ class _OrdersScreenState extends State<OrdersScreen> {
                 child: TabBarView(
                     children: <Widget>[
                       FinishedOrdersPage(),
-                      CurrentOrdersPage()
+                    //  CurrentOrdersPage(),
+                      CurrentOrdersPage(),
                     ]),
               ),
             ],
@@ -45,4 +55,4 @@ class _OrdersScreenState extends State<OrdersScreen> {
         )
     );
   }
-}*/
+}

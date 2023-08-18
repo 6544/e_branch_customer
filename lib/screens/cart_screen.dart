@@ -95,7 +95,7 @@ class _CartScreenState extends State<CartScreen> {
                               children: [
                                 Padding(
                                   padding: const EdgeInsets.only(left: 10),
-                                  child: CustomText(textDecoration: TextDecoration.none,text: "الإجمالي :", fontSize: 16,fontWeight: FontWeight.w600,),
+                                  child: CustomText(textDecoration: TextDecoration.none,text: "الإجمالي : ${double.parse(snapshot.data!.docs[index]["postPrice"])*snapshot.data!.docs.length}", fontSize: 16,fontWeight: FontWeight.w600,),
                                 ),
                                 const Spacer(),
                                      Column(
@@ -215,7 +215,11 @@ class _CartScreenState extends State<CartScreen> {
                                // if(data.shippingType==0){
                                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("تم ارسال الطلب بنجاح"),duration: Duration(seconds: 1),));
                               //  toast("", context);
-                                  await FirebaseFirestore.instance.collection("orders").doc(FirebaseAuth.instance.currentUser!.uid).set({
+                                  String orderid = FirebaseAuth.instance.currentUser!.uid[0].toLowerCase().codeUnits[0] >
+                                      snapshot.data!.docs.first["postDesc"].toLowerCase().codeUnits[0]?"${FirebaseAuth.instance.currentUser!.uid}${snapshot.data!.docs.first["postDesc"]}":"${snapshot.data!.docs.first["postDesc"]}${FirebaseAuth.instance.currentUser!.uid}";
+                                  await FirebaseFirestore.instance.collection("customers").doc(FirebaseAuth.instance.currentUser!.uid).
+                                  collection("orders").doc(orderid).
+                                  set({
                                     "type":data.shippingType,
                                     "image":snapshot.data!.docs.first["postPic"],
                                     "name":snapshot.data!.docs.first["postTitle"]

@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'package:e_branch_customer/screens/terms_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -14,6 +16,7 @@ import 'authscreens/login_screen.dart';
 import 'authscreens/profile_screen.dart';
 import 'contactus_screen.dart';
 import 'home_screen.dart';
+import 'orders/orders_screen.dart';
 
 
 class DrawerScreen extends StatefulWidget {
@@ -104,7 +107,7 @@ class _DrawerScreenState extends State<DrawerScreen> {
                       child: ListTile(
                         onTap: (){
                           Navigator.pop(context);
-                       //   Navigation.mainNavigator(context, OrdersScreen());
+                         Navigation.mainNavigator(context, OrdersScreen());
                         },
                         title: CustomText(text:"الطلبات", fontSize: 14,color: Colors.white,textDecoration: TextDecoration.none,),
                         leading: Image.asset("images/orders.png",height: 25,width: 25,color: Colors.white,),
@@ -166,7 +169,7 @@ class _DrawerScreenState extends State<DrawerScreen> {
                       textDirection: TextDirection.rtl,
                       child: ListTile(
                         onTap: (){
-                        //  Navigation.mainNavigator(context, TermsScreen(type: "terms"));
+                          Navigation.mainNavigator(context, TermsScreen(type: "terms"));
                         },
                         title: CustomText(text:"الشروط والأحكام", fontSize: 14,color: Colors.white,textDecoration: TextDecoration.none,),
                         leading: Image.asset("images/terms.png",height: 25,width: 25,color: Colors.white,),
@@ -178,7 +181,7 @@ class _DrawerScreenState extends State<DrawerScreen> {
                       textDirection: TextDirection.rtl,
                       child: ListTile(
                         onTap: (){
-                         // Navigation.mainNavigator(context, TermsScreen(type: "privcy"));
+                          Navigation.mainNavigator(context, TermsScreen(type: "privcy"));
                         },
                         title: CustomText(text:"سياسة الخصوصية", fontSize: 14,color: Colors.white,textDecoration: TextDecoration.none,),
                         leading: Image.asset("images/terms.png",height: 25,width: 25,color: Colors.white,),
@@ -190,7 +193,7 @@ class _DrawerScreenState extends State<DrawerScreen> {
                       textDirection: TextDirection.rtl,
                       child: ListTile(
                         onTap: (){
-                        //  Navigation.mainNavigator(context, TermsScreen(type: "about"));
+                          Navigation.mainNavigator(context, TermsScreen(type: "about"));
                         },
                         title: CustomText(text:"معلومات عننا", fontSize: 14,color: Colors.white,textDecoration: TextDecoration.none,),
                         leading: Image.asset("images/terms.png",height: 25,width: 25,color: Colors.white,),
@@ -203,8 +206,9 @@ class _DrawerScreenState extends State<DrawerScreen> {
                       textDirection: TextDirection.rtl,
                       child: ListTile(
                         onTap: () async {
-                          SharedPreferences pre = await SharedPreferences.getInstance();
-                          pre.clear();
+                        //  SharedPreferences pre = await SharedPreferences.getInstance();
+                         // pre.clear();
+                         await FirebaseAuth.instance.signOut();
                           Navigation.removeUntilNavigator(context, LoginScreen());
                         },
                         title: CustomText(text:"خروج", fontSize: 14,color: Colors.white,textDecoration: TextDecoration.none,),
