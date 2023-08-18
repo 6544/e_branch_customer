@@ -13,6 +13,7 @@ import '../providers/home_provider.dart';
 import '../states/homes_states.dart';
 import 'chats_screen.dart';
 import 'home_screen.dart';
+import 'package:dots_indicator/dots_indicator.dart';
 
 class MerchantScreen extends StatefulWidget {
  // String id,name;
@@ -24,6 +25,14 @@ final String name;
 }
 
 class _MerchantScreenState extends State<MerchantScreen> {
+  int currentPage = 0;
+  PageController _pageController = PageController();
+
+  @override
+  void initState() {
+    _pageController = PageController(initialPage: currentPage);
+    super.initState();
+  }
   /*late List<Widget> images;
   late ProductsModel productsModel;
   late CategoriesModel categoriesModel;
@@ -45,6 +54,13 @@ class _MerchantScreenState extends State<MerchantScreen> {
   }*/
   @override
   Widget build(BuildContext context) {
+    _dotsindicator(int? dotsindex) {
+      return DotsIndicator(
+        dotsCount: 3,
+        position: dotsindex!,
+        decorator: DotsDecorator(color: Colors.white, activeColor: Colors.blue),
+      );
+    }
     return Scaffold(
       appBar: CustomAppBar(text: " ${widget.name}",leading: IconButton(onPressed: (){
         Navigation.removeUntilNavigator(context, HomeScreen());
@@ -67,19 +83,47 @@ class _MerchantScreenState extends State<MerchantScreen> {
                       if(images.isEmpty){
                         return SizedBox();
                       }*/
-                      /*return*/ SizedBox(
-                        height: 170.0,
-                        width: double.infinity,
-                        child:Container(
-                          child: Image.network(widget.imageurl,fit: BoxFit.fill,),
-                        ) /*Carousel(
-                          images: images,
-                          dotSize: 4.0,
-                          dotSpacing: 15.0,
-                          dotColor: Config.mainColor,
-                          indicatorBgPadding: 5.0,
-                          borderRadius: true,
-                        ),*/
+                      /*return*/ Stack(
+                        children: [
+
+                          SizedBox(
+                            height: 170.0,
+                            width: double.infinity,
+                            child: Stack(
+                              children: [
+                                PageView.builder(
+                                    controller: _pageController,
+                                    onPageChanged: (pos) {
+                                      setState(() {
+                                        currentPage = pos;
+                                      });
+                                    },
+                                    itemCount: 3,
+                                    itemBuilder: (context,index){
+                                     return Container(
+                                        child: Image.network(widget.imageurl,fit: BoxFit.fill,),
+                                      );
+                                    }),
+                                Positioned(
+                                  bottom: 10,
+                                  left: 0,
+                                  right: 0,
+                                  child: _dotsindicator(
+                                    _pageController.hasClients ? _pageController.page?.round() : 0,
+                                  ),
+                                ),
+                              ],
+                            )
+                           /*Carousel(
+                              images: images,
+                              dotSize: 4.0,
+                              dotSpacing: 15.0,
+                              dotColor: Config.mainColor,
+                              indicatorBgPadding: 5.0,
+                              borderRadius: true,
+                            ),*/
+                          ),
+                        ],
                       ),
                  //   }
               //  ),

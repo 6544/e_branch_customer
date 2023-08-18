@@ -251,6 +251,7 @@ class FirebaseAuthMethods {
     required String productPrice,
     required String productTitle,
    required String productDescription,
+    required String category,
   }) async {
     String res = "Some error Occured";
     try {
@@ -268,7 +269,8 @@ class FirebaseAuthMethods {
         "postPic": productPic,
         "postPrice": productPrice,
         "postTitle": productTitle,
-        "postDesc":productDescription
+        "postDesc":productDescription,
+        "category":category
        // "postLocation": postLocation,
       //  "datePublished": DateTime.now(),
       });

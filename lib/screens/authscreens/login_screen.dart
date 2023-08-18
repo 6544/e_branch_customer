@@ -42,9 +42,9 @@ class _LoginScreenState extends State<LoginScreen> {
                 const SizedBox(height: 40,),
                 Image.asset("images/logo.png",width: 180,height: 180,),
                 const SizedBox(height: 50,),
-                CustomInput(controller: phoneNumberController, hint: "رقم الهاتف", textInputType: TextInputType.phone,suffixIcon: Icon(Icons.phone,color: Config.mainColor,), onTap: () {  }, prefixIcon:  Icon(Icons.phone,color: Config.mainColor,), onChange: (String ) {  }, maxLines: 2,),
+                CustomInput(controller: phoneNumberController, hint: "البريد الالكتروني", textInputType: TextInputType.emailAddress,suffixIcon: Icon(Icons.email,color: Config.mainColor,), onTap: () {  }, prefixIcon:  SizedBox.shrink(), onChange: (String ) {  }, maxLines: 1,),
                 const SizedBox(height: 15,),
-                CustomInput(controller: passwordController, hint: "كلمة المرور", textInputType: TextInputType.text,obscureText: true,suffixIcon: Icon(Icons.lock,color: Config.mainColor,), onTap: () {  }, prefixIcon:  Icon(Icons.phone,color: Config.mainColor,), onChange: (String ) {  }, maxLines: 1,),
+                CustomInput(controller: passwordController, hint: "كلمة المرور", textInputType: TextInputType.text,obscureText: true,suffixIcon: Icon(Icons.lock,color: Config.mainColor,), onTap: () {  }, prefixIcon: SizedBox.shrink(), onChange: (String ) {  }, maxLines: 1,),
                 const SizedBox(height: 30,),
                 Row(
                   children: [
@@ -73,7 +73,9 @@ class _LoginScreenState extends State<LoginScreen> {
                           context: context,
                         );
                         if (res == "success") {
-                          toast("تم التسجيل بنجاح", context);
+                        //  toast("تم التسجيل بنجاح", context);
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Directionality(textDirection: TextDirection.rtl,child: Text("تم التسجيل بنجاح"))));
+
                           Navigator.of(context).pushReplacement(
                             MaterialPageRoute(
                               builder: (context) => HomeScreen(),

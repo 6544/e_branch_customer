@@ -25,7 +25,19 @@ class _ForgotPassScreenState extends State<ForgotPassScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(
-          text: "استعادة كلمة المرور", leading: Container(), actions: []),
+          text: "استعادة كلمة المرور",
+          leading: SizedBox.shrink(),
+          actions: [
+            InkWell(
+              onTap: () {
+                Navigator.of(context).pop();
+              },
+              child: Padding(
+                padding: EdgeInsets.all(8),
+                child: Icon(Icons.arrow_forward_ios),
+              ),
+            )
+          ]),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(20.0),
@@ -69,37 +81,35 @@ class _ForgotPassScreenState extends State<ForgotPassScreen> {
                 CustomButton(
                   text: "ارسال",
                   onPressed: () async {
-                    await FirebaseAuthMethods()
-                        .forgotPassword(
+                    await FirebaseAuthMethods().forgotPassword(
                         context: context,
-                        email:
-                        phoneNumberController.text.trim().toString());
+                        email: phoneNumberController.text.trim().toString());
                     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                         content: Directionality(
                             textDirection: TextDirection.rtl,
                             child: Text("سيتم ارسال الرقم السرى الجديد"))));
-                /*    if (phoneNumberController.text.isEmpty) {
+                    /*    if (phoneNumberController.text.isEmpty) {
                       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                           content: Directionality(
                               textDirection: TextDirection.rtl,
                               child: Text("من فضلك املأ جميع البيانات"))));
                       //  toast("من فضلك املأ جميع البيانات", context);
                      // return;
-                    } *//*else {
-                     *//* String response = *//*await FirebaseAuthMethods()
+                    } */ /*else {
+                     */ /* String response = */ /*await FirebaseAuthMethods()
                           .forgotPassword(
                               context: context,
                               email:
                                   phoneNumberController.text.trim().toString());
-                     *//* response == "success"
-                          ?*//* ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                     */ /* response == "success"
+                          ?*/ /* ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                               content: Directionality(
                                   textDirection: TextDirection.rtl,
                                   child: Text("سيتم ارسال الرقم السرى الجديد"))));
-                          *//*: ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          */ /*: ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                               content: Directionality(
                                   textDirection: TextDirection.rtl,
-                                  child: Text("حد خطأ"))));*//*
+                                  child: Text("حد خطأ"))));*/ /*
                     }*/
 
                     /* Map<String,dynamic> formData ={

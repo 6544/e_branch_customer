@@ -124,7 +124,9 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
                       "phoneNo": phoneNumberController.text,
                       "text": msgController.text
                     });
-                    toast("تم الرسال بنجاح", context);
+                  //  toast("تم الرسال بنجاح", context);
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Directionality(textDirection: TextDirection.rtl,child: Text("تم الرسال بنجاح"))));
+
                     setState(() {
                       emailController.clear();
                       msgController.clear();

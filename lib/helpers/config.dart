@@ -16,8 +16,8 @@ class Config {
   });
 
   static Color buttonColor = Color(0xff837E83);
-  static double responsiveHeight (context)=> MediaQuery.of(context).size.height;
-  static double responsiveWidth (context)=> MediaQuery.of(context).size.width;
+  static double responsiveHeight (context)=> MediaQuery.sizeOf(context).height;
+  static double responsiveWidth (context)=> MediaQuery.sizeOf(context).width;
 
   // network constants
   static Uri setApi (String endPoint){

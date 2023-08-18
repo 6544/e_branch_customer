@@ -61,7 +61,17 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
     return Scaffold(
       appBar:
-          CustomAppBar(text: "تسجيل الدخول", leading: Container(), actions: []),
+          CustomAppBar(text: "تسجيل الدخول", leading: SizedBox.shrink(), actions: [
+            InkWell(
+              onTap: () {
+                Navigator.of(context).pop();
+              },
+              child: Padding(
+                padding: EdgeInsets.all(8),
+                child: Icon(Icons.arrow_forward_ios),
+              ),
+            )
+          ]),
       body:
       //Consumer<AuthProvider>(
         //  builder: (context, AuthProvider authProvider, child) {
@@ -319,8 +329,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 MaterialPageRoute(
                                     builder: (context) => HomeScreen()),
                               );
+                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Directionality(textDirection: TextDirection.rtl,child: Text("تم التسجيل بنجاح"))));
 
-                              toast("تم التسجيل بنجاح", context);
+                            //  toast("تم التسجيل بنجاح", context);
                               Navigation.removeUntilNavigator(
                                   context, HomeScreen());
                             } else {
