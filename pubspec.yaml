@@ -57,13 +57,15 @@ dev_dependencies:
   google_maps_flutter: ^2.3.0
   geolocator: ^9.0.2
   geocoding: ^2.1.0
-  firebase_messaging: ^14.6.5
+  firebase_messaging:
   another_flushbar: ^1.12.30
   url_launcher: ^6.1.11
   cloud_firestore: ^4.8.4
   uuid: ^3.0.7
   google_maps_webservice: ^0.0.20-nullsafety.2
   dots_indicator: ^3.0.0
+  flutter_local_notifications:
+  http:
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
